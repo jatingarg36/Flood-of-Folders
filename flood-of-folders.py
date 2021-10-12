@@ -12,7 +12,7 @@ class Loader:
         self.timeout = timeout
 
         self._thread = Thread(target=self._animate, daemon=True)
-        self.steps = ["⢿", "⣻", "⣽", "⣾", "⣷", "⣯", "⣟", "⡿"]
+        self.steps = ["|","/","-","\\"]
         self.done = False
 
     def start(self):
@@ -45,8 +45,7 @@ class Loader:
         print("\r" + " " * cols, end="", flush=True)
         print(f"\r{excuse}", flush=True)
 
-random_text = "Hello world where are you"
-    # random_text = "This is a security web where you are now trapped you cannot find where the actual data is stored unless you are the owner as there are too many files and folders to go through and I dont think you are here to waste your time in such a pathetic task right So just get the hell out of here otherwise someone will catch you like this and you wont be able to escape then Thank you for considering my humble web Have a nice day"
+random_text = "This is a security web where you are now trapped you cannot find where the actual data is stored unless you are the owner as there are too many files and folders to go through and I dont think you are here to waste your time in such a pathetic task right So just get the hell out of here otherwise someone will catch you like this and you wont be able to escape then Thank you for considering my humble web Have a nice day"
 list_text = random_text.split(" ")
 list_file_type = [".mkv",".jpg",".mp4",".avi",".png",".txt",".py",".cpp",".doc",".zip",".dmg",".exe",".gif",".php",".tar",".wim",".xap",".cad"]
 
@@ -161,9 +160,9 @@ while(1):
                 webbrowser.open(os.path.realpath(dir))
                 break
             else:
-                print("invalid key\n")
+                print("invalid key\\n")
         else:
-            print("invalid key\n")
+            print("invalid key\\n")
     else:
         print("invalid input\\n")
 """.format(self.cipher_text)
