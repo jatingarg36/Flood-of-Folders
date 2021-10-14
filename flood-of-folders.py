@@ -49,39 +49,35 @@ random_text = "This is a security web where you are now trapped you cannot find 
 list_text = random_text.split(" ")
 list_file_type = [".mkv",".jpg",".mp4",".avi",".png",".txt",".py",".cpp",".doc",".zip",".dmg",".exe",".gif",".php",".tar",".wim",".xap",".cad"]
 
-def create_dummy(sub):
-    
-    if len(os.listdir(sub)) == 0:
-        for j in range(len(list_text)):
-            file_path = os.path.join(sub,list_text[j])
-            f = open(file_path+random.choice(list_file_type),"w")
-            f.write("Now the file has more content!")
-            f.close()
+class Creation:
+    def __init__(self,name,sub1,sub2,sub3):
+        self.name = name
+        self.sub1 = sub1
+        self.sub2 = sub2
+        self.sub3 = sub3
+        self.thread_list = []
+        self.path = os.path.join(".",self.name)
+        self.thread_count = 16
+        
+    def create_dummy(self,sub):
+        if len(os.listdir(sub)) == 0:
+            for j in range(len(list_text)):
+                file_path = os.path.join(sub,list_text[j])
+                f = open(file_path+random.choice(list_file_type),"w")
+                f.write("Now the file has more content!")
+                f.close()
 
-def create_virus(name,sub1,sub2,sub3):
-    excuse = None
-    path = os.path.join(".",name)
-    if not os.path.isdir(path):
-        try: 
-            os.mkdir(path) 
-        except OSError as error: 
-            print(error)
-    else:
-        excuse = "dir already exists"
-        return excuse
-    
-    
-    if(sub1>0):
-        for k in range(sub1):
+    def create_folder(self,start,end):
+        for k in range(start,end):
             name = "{:03d}".format(k)
-            subDir = os.path.join(path,str(name))
+            subDir = os.path.join(self.path,str(name))
             if not os.path.isdir(subDir):
                 try: 
                     os.mkdir(subDir)
                 except OSError as error: 
                     print(error)
-            if(sub2>0):
-                for k2 in range(sub2):
+            if(self.sub2>0):
+                for k2 in range(self.sub2):
                     name2 = "{:02d}".format(k2)
                     subDir2 = os.path.join(subDir,str(name2))
                     if not os.path.isdir(subDir2):
@@ -89,8 +85,8 @@ def create_virus(name,sub1,sub2,sub3):
                             os.mkdir(subDir2)
                         except OSError as error: 
                             print(error)
-                    if(sub3>0):
-                        for k3 in range(sub3):
+                    if(self.sub3>0):
+                        for k3 in range(self.sub3):
                             name3 = "{:01d}".format(k3)
                             subDir3 = os.path.join(subDir2,str(name3))
                             if not os.path.isdir(subDir3):
@@ -98,15 +94,37 @@ def create_virus(name,sub1,sub2,sub3):
                                     os.mkdir(subDir3)
                                 except OSError as error: 
                                     print(error)
-                            create_dummy(subDir3)
+                            self.create_dummy(subDir3)
                     else:
-                        create_dummy(subDir2)
+                        self.create_dummy(subDir2)
             else:
-                create_dummy(subDir)
+                self.create_dummy(subDir)
 
-    else:
-        excuse = "Insufficient number of 1st level Sub directories"
-    return excuse
+    def create_virus(self):
+        excuse = None
+        
+        if not os.path.isdir(self.path):
+            try: 
+                os.mkdir(self.path) 
+            except OSError as error: 
+                print(error)
+        else:
+            excuse = "dir already exists"
+            return excuse
+        
+        if(self.sub1>0):
+            x =self.sub1
+            for i in range(0,x,max(1,x//self.thread_count)):
+                print("creating folder from ",i,">",min(x,i-1+max(2,x//self.thread_count)))
+                thread = Thread(target=self.create_folder,args=(i,min(x,i-1+max(2,x//self.thread_count))),daemon=True) 
+                thread.start()
+                self.thread_list.append(thread)
+            for thread in self.thread_list:
+                thread.join()
+
+        else:
+            excuse = "Insufficient number of 1st level Sub directories"
+        return excuse
 
 class Heaven:
     def __init__(self,dir):
@@ -216,7 +234,8 @@ def main():
                 print("Invalid input")
         
         waiting = Loader("Creating your privacy ","Thanks for your patience! Work is now done",0.05).start()
-        excuse = create_virus(name,sub1,sub2,sub3)
+        creation = Creation(name,sub1,sub2,sub3)
+        excuse = creation.create_virus()
         # excuse = None
         if(excuse == None):
             waiting.stop()
@@ -270,7 +289,7 @@ def main():
         else:
             waiting.terminate(excuse)
     else:
-        print("If not safe out there! Its highly recommended to use this system to create your own privacy system! Fuck you for now")
+        print("If not safe out there! Its highly recommended to use this system to create your own privacy system!")
 
 
 if __name__ == "__main__":
